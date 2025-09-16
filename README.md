@@ -17,7 +17,9 @@
      Passive Infrared (PIR) sensors are electronic devices that detect motion by sensing infrared radiation emitted by objects. Every object with a temperature above absolute zero emits infrared radiation. The PIR sensor detects this radiation and can sense motion when a warm object, such as a human body, passes within its detection range. The sensor contains a pair of pyroelectric sensors housed under a Fresnel lens, which focuses the infrared signals onto the sensor surface. When the infrared levels change rapidly between the two pyroelectric sensors—such as when a person walks by—the sensor outputs a HIGH signal indicating motion detection.
 PIR sensors are widely used in motion detection systems, security alarms, automatic lighting systems, and smart surveillance. They are popular due to their low power consumption, affordability, and ease of integration with microcontrollers such as the Arduino Uno. The sensor typically has three pins: VCC (power), GND (ground), and OUT (signal). When idle, the output pin remains LOW. Once motion is detected, the sensor sends a HIGH signal to the microcontroller, which can be used to trigger a response such as turning on an LED or activating an alarm.
 In this experiment, the PIR sensor is connected to an Arduino Uno board. The VCC pin of the sensor is connected to the 5V supply of the Arduino to power the sensor. The GND pin is connected to the Arduino’s ground. The OUT pin is connected to a digital input pin (pin 2 in this case) of the Arduino. The Arduino continuously monitors the state of the signal pin. If the signal pin goes HIGH, it means the sensor has detected motion, and the Arduino is programmed to turn ON the built-in LED on pin 13. If no motion is detected, the signal remains LOW, and the LED is turned OFF.
-Circuit Diagram:
+## Circuit Diagram:
+<img width="1366" height="768" alt="image" src="https://github.com/user-attachments/assets/e61d5aa4-43d8-47c6-bce1-49cf8be07ea5" />
+
  
 ## Procedure: //Modify based on your circuit
 
@@ -60,12 +62,73 @@ Step 7: Save Your Work
 
 
 # Code:
+```
+/*
+ 
+  The circuit:
+ * LCD RS pin to digital pin 12
+ * LCD Enable pin to digital pin 11
+ * LCD D4 pin to digital pin 5
+ * LCD D5 pin to digital pin 4
+ * LCD D6 pin to digital pin 3
+ * LCD D7 pin to digital pin 2
+ * LCD R/W pin to ground
+ * LCD VSS pin to ground
+ * LCD VCC pin to 5V
+ * 10K resistor:
+ * ends to +5V and ground
+ * wiper to LCD VO pin (pin 3)
 
+  */
+
+#include <LiquidCrystal.h>
+LiquidCrystal lcd(12, 11, 5, 4, 3, 2);
+int sensor = 9;  // the pin that the sensor is atteched to
+int state = LOW; // by default, no motion detected
+int val = 0;
+int buzzer= 7;  // the pin that the buzzer is atteched to
+
+void setup() 
+{
+  pinMode(sensor, INPUT);    // initialize sensor as an input
+  pinMode(buzzer, OUTPUT); //initialize buzzer as an OUTPUT
+  lcd.begin(16, 2);
+  lcd.print("Hello There!!!");
+}
+
+void loop() 
+{
+  val = digitalRead(sensor);   // read sensor value
+  if (val == HIGH)
+  {
+  delay(100);                // delay 100 milliseconds 
+    if (state == LOW) 
+      {
+    lcd.setCursor(0, 1);
+    lcd.print("Motion Detected!");
+    digitalWrite(buzzer, HIGH);   // turn the LED/Buzz ON
+    state = HIGH;       // update variable state to HIGH
+       }  
+     }
+  else
+   {
+     delay(200);             // delay 200 milliseconds 
+      if (state == HIGH)
+     {
+        lcd.setCursor(0, 1);
+        lcd.print("Motion Stopped!");
+        digitalWrite(buzzer, LOW);   // turn the Buzzer ON
+        state = LOW;       // update variable state to LOW
+     }
+   }
+}
+```
 
 
 # Output:
 
 
+https://github.com/user-attachments/assets/416298fe-ae67-4027-a3e2-041a4eaef279
 
 
 # Result:
